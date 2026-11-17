@@ -1,0 +1,150 @@
+/* Everything is scoped under .tq so the quiz can be dropped into another
+   page (it is embedded in a blog post) without leaking styles. Inner rules
+   are written `.tq .tq-…` so they outrank a host page's `.content p`-style
+   rules. */
+.tq {
+    --tq-paper: #fbf7ee;
+    --tq-ink: #1b2b34;
+    --tq-faint: #a7adba;
+    --tq-accent: #c2542d;
+
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 26rem;
+    margin: 1.5rem auto;
+    padding: 1.25rem 1.25rem 0;
+    overflow: hidden;
+    background: var(--tq-paper);
+    color: var(--tq-ink);
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.25);
+    font-family: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+    line-height: 1.2;
+    text-align: center;
+}
+
+.tq *,
+.tq *::before,
+.tq *::after {
+    box-sizing: border-box;
+}
+
+.tq .tq-staff {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.tq .tq-staff line {
+    stroke: var(--tq-ink);
+    stroke-linecap: round;
+}
+
+.tq .tq-staff path {
+    fill: var(--tq-ink);
+}
+
+/* Fixed height, so the card does not jump when the answer appears. */
+.tq .tq-answer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    height: 9.5rem;
+    padding-bottom: 0.5rem;
+    border-top: 1px dashed var(--tq-faint);
+}
+
+.tq .tq-answer--hidden {
+    visibility: hidden;
+}
+
+.tq .tq-answer--shown {
+    animation: tq-reveal 0.3s ease-out;
+}
+
+.tq .tq-name {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.tq .tq-valves {
+    display: flex;
+    gap: 0.9rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tq .tq-valve {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    font-size: 0.8rem;
+    color: var(--tq-ink);
+}
+
+.tq .tq-valve::before {
+    content: '';
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 0.16rem solid var(--tq-ink);
+    border-radius: 50%;
+}
+
+.tq .tq-valve--down::before {
+    background: var(--tq-ink);
+    box-shadow: inset 0 0 0 0.16rem var(--tq-paper);
+}
+
+.tq .tq-fingering {
+    margin: 0;
+    font-size: 0.85rem;
+    font-style: italic;
+}
+
+/* Runs down over the three seconds of each phase. The two phases use
+   differently named (but identical) keyframes so that switching phase
+   restarts the animation. */
+.tq .tq-timer {
+    height: 0.25rem;
+    margin: 0 -1.25rem;
+    background: var(--tq-accent);
+    transform-origin: left;
+    animation: 3s linear both;
+}
+
+.tq .tq-timer--question {
+    animation-name: tq-drain-question;
+}
+
+.tq .tq-timer--answer {
+    animation-name: tq-drain-answer;
+}
+
+@keyframes tq-drain-question {
+    from { transform: scaleX(1); }
+    to { transform: scaleX(0); }
+}
+
+@keyframes tq-drain-answer {
+    from { transform: scaleX(1); }
+    to { transform: scaleX(0); }
+}
+
+@keyframes tq-reveal {
+    from { opacity: 0; transform: translateY(0.3rem); }
+    to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tq .tq-answer--shown { animation: none; }
+    .tq .tq-timer { animation: none; transform: scaleX(0); }
+}
